@@ -1,15 +1,15 @@
 <template>
   <div>
-    <div class="tag-container">
+    <div class="vuetagger">
 
-      <div class="tag-list">
-        <span v-for="tag in tags" class="tag">
-          {{ tag }} <span class="remover" @click="remove(tag)">&times;</span>
+      <div class="vuetagger-list">
+        <span v-for="tag in tags" class="vuetagger-tag">
+          {{ tag }} <span class="vuetagger-tag-remover" @click="remove(tag)">&times;</span>
         </span>
       </div>
 
       <input type="email"
-        id="vuetagger-input"
+        class="vuetagger-input"
         v-model="newTag"
         @keydown.enter="append"
         @keydown.delete="removeLastTag"
@@ -129,18 +129,18 @@
 </script>
 
 <style scoped>
-  .tag-container {
+  .vuetagger {
     display: table;
     border: 1px solid #cecece;
     padding: 4px 8px;
     width: 100%;
   }
 
-  .tag-list {
+  .vuetagger-list {
 
   }
 
-  .tag {
+  .vuetagger-tag {
     background: #f0f0f0;
     padding: 0 0 0 8px;
     display: inline-block;
@@ -149,21 +149,20 @@
     cursor: default;
   }
 
-  #vuetagger-input {
+  .vuetagger-input {
     padding: 4px;
-    /*border: none;*/
     display: table-cell;
     outline: none;
     width: 100%;
     box-sizing: border-box;
   }
 
-  .tag:hover .remover{
+  .vuetagger-tag:hover .vuetagger-tag-remover{
     background: #cecece;
     color: white;
   }
 
-  .remover {
+  .vuetagger-tag-remover {
     padding: 4px 8px;
     display: inline-block;
     cursor: default;
