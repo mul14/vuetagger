@@ -3,7 +3,7 @@
     <div class="tag-container">
 
       <div class="tag-list">
-        <span v-for="tag in tags" track-by="$index" class="tag">
+        <span v-for="tag in tags" class="tag">
           {{ tag }} <span class="remover" @click="remove(tag)">&times;</span>
         </span>
       </div>
@@ -24,8 +24,12 @@
 
     props: {
       value: {
-        type: String,
+        type: Array,
         default: ''
+      },
+      pattern: {
+        type: String,
+        default: null
       }
     },
 
@@ -46,32 +50,63 @@
 
     methods: {
 
+      /**
+       * Initialize the tags
+       */
       initialize() {
-        const initialTags = this.value.split(',')
+        const initialTags = this.value
         initialTags.forEach((tag) => {
           this.tags.push(tag)
         })
       },
 
 
+      /**
+       * Append new tag
+       */
       append() {
 
+        /**
+         * Don't allow empty tag.
+         */
         if (this.newTag.trim() === '') {
           return false
         }
 
+        /**
+         * Don't allow duplicate tags.
+         */
+        let duplicate = false
+
         this.tags.forEach((tag) => {
           if (tag === this.newTag.trim()) {
-            return false
+            duplicate = true
           }
         })
 
+        if (duplicate) return false
+
+        /**
+         * Check new tag with regex pattern
+         */
+        const regex = new RegExp(this.pattern)
+        if (this.pattern && ! regex.test(this.newTag)) {
+          return false
+        }
+
+        /**
+         * Everything looks good, let's add new tag.
+         */
         this.tags.push(this.newTag.trim())
         this.newTag = ''
         this.$emit('change', this.tags)
       },
 
 
+      /**
+       * Remove the selected tag
+       * @param {string} tag  Tag name
+       */
       remove(tag) {
         const index = this.tags.indexOf(tag)
         this.tags.splice(index, 1)
@@ -79,8 +114,11 @@
       },
 
 
+      /**
+       * Remove the last tag
+       */
       removeLastTag() {
-        if (this.newTag === '') {
+        if (this.newTag === '' && this.tags.length > 0) {
           this.tags.pop()
           this.$emit('change', this.tags)
         }
